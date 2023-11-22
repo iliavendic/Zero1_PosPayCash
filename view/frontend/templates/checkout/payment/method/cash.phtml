@@ -1,0 +1,27 @@
+<div id="pos-pay-cash">
+    <!-- 
+    <label for="custom_amount">Cash tendered</label>
+    <input type="text" id="custom_amount" name="custom_amount" wire:model="amountTendered"> -->
+
+    <!-- <img width="50%" height="50%" src="https://www.bankofengland.co.uk/-/media/boe/images/banknotes/5/5-front-specimen.jpg" wire:click="$emit('addTender', [5])">
+    <br>
+    <img width="50%" height="50%" src="https://www.bankofengland.co.uk/-/media/boe/images/banknotes/10/10-front.jpg" wire:click="$emit('addTender', [10])">
+    <br>
+    <img width="50%" height="50%" src="https://www.bankofengland.co.uk/-/media/boe/images/banknotes/20/polymer/polymer-20-specimen-front-(1).jpg" wire:click="$emit('addTender', [20])">
+    <br>
+    <img width="50%" height="50%" src="https://www.bankofengland.co.uk/-/media/boe/images/banknotes/50/polymer/polymer-50-specimen-front.jpg" wire:click="$emit('addTender', [50])">
+
+    <br>
+    <br>
+
+    <button wire:click="$emit('clearTender')">Clear tendered cash</button> -->
+
+    <br>
+    <br>
+    <label for="custom_amount">Custom amount: </label>
+    <input type="text" id="custom_amount" name="custom_amount" wire:model="amountTendered">
+    <br>
+    <br>
+
+    <p>Change: <?= $magewire->getChange() ?></p>
+</div>

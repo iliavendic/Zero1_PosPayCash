@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.payment.methods">
+            <block name="checkout.payment.method.zero1_pos_pay_cash"
+                as="zero1_pos_pay_cash"
+                template="Zero1_PosPayCash::checkout/payment/method/cash.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        \Zero1\PosPayCash\Magewire\CashMethod
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

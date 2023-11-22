@@ -19,6 +19,11 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_code = 'zero1_pos_pay_cash';
 
     /**
+     * @var string
+     */
+    protected $_infoBlockType = \Zero1\PosPayCash\Block\Info\PosPayCash::class;
+
+    /**
      * @var bool
      */
     protected $_isOffline = true;
