@@ -6,14 +6,14 @@ namespace Zero1\PosPayCash\Magewire;
 
 use Magewirephp\Magewire\Component;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Framework\Pricing\Helper\Data as PricingHelper;
 
 class CashMethod extends Component
 {
-    // protected $loader = true;
+    public $loader = 'Saving & calculating change...';
 
-    protected $listeners = [
-        'addTender',
-        'clearTender'
+    public $listeners = [
+        'save'
     ];
 
     /**
@@ -22,103 +22,55 @@ class CashMethod extends Component
     protected $checkoutSession;
 
     /**
+     * @var PricingHelper
+     */
+    protected $pricingHelper;
+
+    /**
      * @var int
      */
     public $amountTendered = 0;
     
     /**
-     * @var int
-     */
-    public $change = 0;
-
-    /**
-     * @var int
-     */
-    public $customAmount = 0;
-
-    /**
      * @param CheckoutSession $checkoutSession
+     * @param PricingHelper $pricingHelper
      */
     public function __construct(
-        CheckoutSession $checkoutSession
+        CheckoutSession $checkoutSession,
+        PricingHelper $pricingHelper
     ) {
         $this->checkoutSession = $checkoutSession;
+        $this->pricingHelper = $pricingHelper;
     }
 
     /**
-     * @param int $amount
-     * @return $void
+     * Return change based on amount tendered.
+     * 
+     * @return float|string
      */
-    public function addTender($amount): void
-    {
-        $this->amountTendered = $this->amountTendered + $amount;
-    }
-
-    /**
-     * @return void
-     */
-    public function clearTender(): void
-    {
-        $this->amountTendered = 0;
-        $this->customAmount = 0;
-    }
-
-    /**
-     * @return float ??????
-     */
-    public function getChange()
+    public function getChange(): float|string
     {
         $quote = $this->checkoutSession->getQuote();
+        $change = (float)$this->amountTendered - $quote->getGrandTotal();
 
-        return (float)$this->amountTendered - $quote->getGrandTotal();
+        return $this->pricingHelper->currency($change, true, false);
     }
 
-
-    public function mount(): void
+    /**
+     * Save amount tendered to quote.
+     * 
+     * @return void
+     */
+    public function save(): void
     {
-        // $stripeClient = $this->paymentsConfig->getStripeClient();
-        // $quote = $this->checkoutSession->getQuote();
-
-        // $productResponse = $stripeClient->products->create([
-        //     'name' => 'ZERO-1 POS Order - '.$quote->getId(), // TODO figure out why reserved order id isnt set
-        //     'default_price_data' => [
-        //         'currency' => $quote->getQuoteCurrencyCode(),
-        //         'unit_amount' => (int)($quote->getGrandTotal() * 100) // TODO sort this shit out
-        //     ]
-        // ]);
-
-        // if(!isset($productResponse->default_price)) {
-        //     return;
-        // }
-        // $price = $productResponse->default_price;
-
-        // $paymentLinkResponse = $stripeClient->paymentLinks->create([
-        //     'line_items' => [
-        //         [
-        //             'price' => $price,
-        //             'quantity' => 1,
-        //         ],
-        //     ],
-        // ]);
-
-        // if (isset($paymentLinkResponse->url)) {
-        //     $this->qrSource = (new QRCode)->render($paymentLinkResponse->url);
-        // }
-    }
-
-    public function updatingAmountTendered($value) {
-
-        file_put_contents('../callum.log', 'Setting: '.$value.PHP_EOL, FILE_APPEND);
+        if($this->amountTendered && !is_numeric($this->amountTendered)) {
+            $this->dispatchErrorMessage('Amount entered is not valid!');
+            $this->amountTendered = 0;
+            return;
+        }
 
         $payment = $this->checkoutSession->getQuote()->getPayment();
-        $payment->setAdditionalInformation('cash_tendered', $value);
+        $payment->setAdditionalInformation('cash_tendered', $this->amountTendered);
         $this->checkoutSession->getQuote()->save();
-        
-
-
-        // $this->checkoutSession->getQuote()->setAdditionalInformation([
-        //     'cash_tendered' => $value
-        // ]);
-        return $value;
     }
 }
