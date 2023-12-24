@@ -4,7 +4,7 @@ namespace Zero1\PosPayCash\Model;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Directory\Helper\Data as DirectoryHelper;
-use Zero1\Pos\Helper\Data as PosHelper;
+use Zero1\OpenPos\Helper\Data as PosHelper;
 
 class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
