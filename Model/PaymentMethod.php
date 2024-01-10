@@ -16,7 +16,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
     /**
      * @var string
      */
-    protected $_code = 'zero1_pos_pay_cash';
+    protected $_code = 'openpos_pay_cash';
 
     /**
      * @var string
