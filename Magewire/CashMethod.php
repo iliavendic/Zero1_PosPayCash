@@ -7,8 +7,11 @@ namespace Zero1\PosPayCash\Magewire;
 use Magewirephp\Magewire\Component;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Pricing\Helper\Data as PricingHelper;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationInterface;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationResultFactory;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationResultInterface;
 
-class CashMethod extends Component
+class CashMethod extends Component implements EvaluationInterface
 {
     public $loader = 'Saving & calculating change...';
 
@@ -30,7 +33,12 @@ class CashMethod extends Component
      * @var int
      */
     public $amountTendered = 0;
-    
+
+    /**
+     * @var bool
+     */
+    public $applied = false;
+
     /**
      * @param CheckoutSession $checkoutSession
      * @param PricingHelper $pricingHelper
@@ -45,7 +53,7 @@ class CashMethod extends Component
 
     /**
      * Return change based on amount tendered.
-     * 
+     *
      * @return float|string
      */
     public function getChange(): float|string
@@ -58,7 +66,7 @@ class CashMethod extends Component
 
     /**
      * Save amount tendered to quote.
-     * 
+     *
      * @return void
      */
     public function save(): void
@@ -69,8 +77,23 @@ class CashMethod extends Component
             return;
         }
 
+        $this->applied = true;
+
         $payment = $this->checkoutSession->getQuote()->getPayment();
         $payment->setAdditionalInformation('cash_tendered', $this->amountTendered);
         $this->checkoutSession->getQuote()->save();
+    }
+
+    /**
+     * @param EvaluationResultFactory $factory
+     * @return EvaluationResultInterface
+     */
+    public function evaluateCompletion(EvaluationResultFactory $factory): EvaluationResultInterface
+    {
+        if(!$this->applied) {
+            return $factory->createErrorMessage((string) __('Cannot place order. You must apply the amount tendered.'));
+        }
+
+        return $factory->createSuccess();
     }
 }

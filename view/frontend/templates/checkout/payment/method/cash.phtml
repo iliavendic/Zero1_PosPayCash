@@ -1,12 +1,18 @@
 <div id="pos-pay-cash">
-    <label for="custom_amount">Amount tendered: </label>
-    <input type="text" id="custom_amount" name="custom_amount" wire:model.defer="amountTendered" wire:keydown.enter="save">
-    <p>Press enter when complete</p>
 
-    <br>
-    <br>
+    <div class="w-full">
+        <label for="custom_amount">Amount tendered: </label>
+        <input class="" type="text" id="custom_amount" name="custom_amount" wire:model.defer="amountTendered">
+    </div>
 
-    <?php if($magewire->getChange() > 0): ?>
-        <p>Change: <?= $magewire->getChange() ?></p>
-    <?php endif; ?>
+    <div class="w-full mt-4">
+        <button class="btn btn-secondary w-full border-0" wire:click="save">Apply</button>
+    </div>
+
+    <div class="w-full mt-4">
+        <?php if($magewire->getChange() > 0): ?>
+            <p class="font-bold">Change due: <?= $magewire->getChange() ?></p>
+        <?php endif; ?>
+    </div>
+
 </div>
