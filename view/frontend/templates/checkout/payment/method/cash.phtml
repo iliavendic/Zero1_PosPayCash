@@ -1,12 +1,12 @@
 <div id="pos-pay-cash">
 
     <div class="w-full">
-        <label for="custom_amount">Amount tendered: </label>
-        <input class="" type="text" id="custom_amount" name="custom_amount" wire:model.defer="amountTendered">
+        <label for="custom_amount"><?php echo __('Amount paid in cash: '); ?></label>
+        <input class="form-input" type="text" id="custom_amount" name="custom_amount" wire:model.defer="amountTendered">
     </div>
 
     <div class="w-full mt-4">
-        <button class="btn btn-secondary w-full border-0" wire:click="save">Apply</button>
+        <button class="btn btn-primary btn-secondary w-full border-0" wire:click="save"><?php echo __('Apply'); ?></button>
     </div>
 
     <div class="w-full mt-4">
