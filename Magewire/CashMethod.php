@@ -61,7 +61,7 @@ class CashMethod extends Component implements EvaluationInterface
         $quote = $this->checkoutSession->getQuote();
         $change = (float)$this->amountTendered - $quote->getGrandTotal();
 
-        return $this->pricingHelper->currency($change, true, false);
+        return $this->pricingHelper->currency($change, true, true);
     }
 
     /**
